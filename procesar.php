@@ -1,6 +1,8 @@
 <?php
 // Incluir el archivo de conexión
 require_once 'conexion.php';
+// Llamada al archivo de la lógica:
+require_once 'logic/cultivos.php';
 
 $errores = [];
 
@@ -100,11 +102,28 @@ if (!empty($errores)) {
     exit;
 }
 
-// Si no hay errores, insertar en la base de datos con mysqli_query
-$sql = "INSERT INTO cultivos (nombre, tipo, dias_cosecha) 
-        VALUES ('$nombre', '$tipo', $dias_cosecha)";
+// ¡AHORA USAMOS SENTENCIA PREPARADA!
+// ¡CAMBIO IMPORTANTE EN EL CÓDIGO!
+$stmt = mysqli_prepare($conn, "INSERT INTO cultivos (nombre, tipo, dias_cosecha) VALUES (?, ?, ?)");
+if ($stmt === false) {
+    // Error al preparar la sentencia
+    echo "<!DOCTYPE html>
+    <html lang='es'>
+    <head><meta charset='UTF-8'><title>Error</title></head>
+    <body>
+        <h1>Error interno</h1>
+        <p>No se pudo preparar la consulta.</p>
+        <a href='nuevo.php'>← Volver al formulario</a>
+    </body>
+    </html>";
+    exit;
+}
 
-if (mysqli_query($conn, $sql)) {
+// Vincular parámetros: "s" = string, "i" = integer
+mysqli_stmt_bind_param($stmt, "ssi", $nombre, $tipo, $dias_cosecha);
+
+// Ejecutar
+if (mysqli_stmt_execute($stmt)) {
     // Éxito
     echo "<!DOCTYPE html>
     <html lang='es'>
@@ -162,22 +181,17 @@ if (mysqli_query($conn, $sql)) {
         </div>
     </body>
     </html>";
+   
 } else {
-    // Error al insertar
-    echo "<!DOCTYPE html>
-    <html lang='es'>
-    <head>
-        <meta charset='UTF-8'>
-        <title>Error</title>
-    </head>
-    <body>
-        <h1>Error al insertar el cultivo</h1>
-        <p>Error: " . mysqli_error($conn) . "</p>
-        <a href='nuevo.php'>← Volver al formulario</a>
-    </body>
-    </html>";
+    // Registrar el error técnico en el log
+    error_log("Error al insertar cultivo: " . mysqli_stmt_error($stmt));
+    
+    // Redirigir a una página con mensaje genérico
+    header("Location: nuevo.php?error=error_insercion");
+    exit;
 }
 
-// Cerrar conexión
+// Cerrar sentencia y conexión
+mysqli_stmt_close($stmt);
 mysqli_close($conn);
 ?>

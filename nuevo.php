@@ -1,3 +1,12 @@
+<?php
+// Mostrar mensaje si hay un error.
+$error = $_GET['error'] ?? null;
+$mensaje_error = '';
+
+if ($error === 'error_insercion') {
+    $mensaje_error = "No se pudo guardar el cultivo. Por favor, inténtelo de nuevo.";
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -75,7 +84,11 @@
 <body>
     <div class="container">
         <h1>Registrar Nuevo Cultivo</h1>
-        
+        <?php if ($mensaje_error): ?>
+            <div style="color: #721c24; background-color: #f8d7da; padding: 10px; border-radius: 4px; margin-bottom: 20px;">
+                <?php echo htmlspecialchars($mensaje_error); ?>
+            </div>
+        <?php endif; ?>
         <form method="POST" action="procesar.php">
             <div class="form-group">
                 <label for="nombre">Nombre del Cultivo:</label>

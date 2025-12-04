@@ -1,18 +1,9 @@
 <?php
     //Llamada al archivo con los datos de conexión.
     require 'conexion.php';
-    
-    // Función para calcular el ciclo del cultivo.
-    function cicloCultivo($dias) {
-        if ($dias < 60) {
-            return "Corto";
-        } elseif ($dias >= 60 && $dias <= 180) {
-            return "Medio";
-        } else {
-            return "Tardío";
-        }
-    }
-    
+    //Llamada al archivo con la lógica.
+    require_once 'logic/cultivos.php';
+        
     $sql = "SELECT * FROM cultivos";
     $resultado = mysqli_query($conn, $sql);
 ?>
@@ -99,7 +90,7 @@
         <?php 
             // Recorremos la base de datos para obtener los resultados.
             while ($fila = mysqli_fetch_assoc($resultado)) { 
-            $ciclo = cicloCultivo($fila['dias_cosecha']);
+            $ciclo = calcularCicloCultivo((int)$fila['dias_cosecha']);
             $clase_ciclo = '';
             
             // Asignar clase CSS según el ciclo
