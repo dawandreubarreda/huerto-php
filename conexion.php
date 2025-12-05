@@ -12,10 +12,10 @@ if (file_exists($envFile)) {
 }
 
 // Obtener las variables
-$host = $_ENV['DB_HOST'] ?? 'localhost';
-$user = $_ENV['DB_USER'] ?? 'root';
-$pass = $_ENV['DB_PASS'] ?? '';
-$name = $_ENV['DB_NAME'] ?? 'huerta_db';
+$host = $_ENV['DB_HOST'];
+$user = $_ENV['DB_USER'];
+$pass = $_ENV['DB_PASS'];
+$name = $_ENV['DB_NAME'];
 
 // Conexión
 $conn = new mysqli($host, $user, $pass, $name);
