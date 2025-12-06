@@ -1,6 +1,6 @@
 <?php
     //Llamada al archivo con los datos de conexión.
-    require 'conexion.php';
+    require 'config/db.php';
     //Llamada al archivo con la lógica.
     require_once 'logic/cultivos.php';
         

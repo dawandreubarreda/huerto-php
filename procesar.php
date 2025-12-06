@@ -1,6 +1,6 @@
 <?php
 // Incluir el archivo de conexión
-require_once 'conexion.php';
+require_once 'logic/db.php';
 // Llamada al archivo de la lógica:
 require_once 'logic/cultivos.php';
 
